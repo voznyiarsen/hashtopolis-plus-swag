@@ -14,7 +14,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $(date '+%H:%M:%S')  $*"; }
 
 CACHE_FLAG=""
 NO_CACHE=false
-PARALLEL=true
+PARALLEL=false
 
 usage() {
   cat <<EOF
@@ -24,7 +24,7 @@ Build Hashtopolis Docker images from upstream source.
 
 Options:
   --no-cache    Build images without using Docker cache
-  --sequential  Build images one at a time (default: parallel)
+  --parallel    Build both images at once (default: sequential)
   --help        Show this help message and exit
 EOF
   exit 0
@@ -32,9 +32,9 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --no-cache)   NO_CACHE=true; shift ;;
-    --sequential) PARALLEL=false; shift ;;
-    --help)       usage ;;
+    --no-cache) NO_CACHE=true; shift ;;
+    --parallel) PARALLEL=true; shift ;;
+    --help)     usage ;;
     *) log_error "Unknown option: $1"; usage ;;
   esac
 done
