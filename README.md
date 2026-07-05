@@ -43,9 +43,10 @@ Edit `.env` with your own values. At minimum, change:
 | `make up`          | Start all services                         |
 | `make down`        | Stop all services                          |
 | `make logs`        | Tail logs from all services                |
-| `make update`      | Pull upstream, rebuild, restart            |
-| `make clean`       | Remove cloned upstream repos               |
-| `./build-images.sh --help` | Full build script options           |
+| `make update`      | Pull upstream, rebuild only if changed, restart |
+| `make clean`       | Remove cloned upstream repos                  |
+| `./update.sh`      | Check for updates, rebuild if needed          |
+| `./build-images.sh --help` | Full build script options              |
 
 ## SWAG Config
 

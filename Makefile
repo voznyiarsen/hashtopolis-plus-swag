@@ -43,9 +43,7 @@ logs:
 	@docker compose logs -f
 
 update: check
-	@./build-images.sh
-	@docker compose up -d --force-recreate
-	@echo "Update complete."
+	@./update.sh
 
 clean:
 	@rm -rf web-ui server
