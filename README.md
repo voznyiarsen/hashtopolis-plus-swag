@@ -60,5 +60,4 @@ This config proxies `hashtopolis.*` subdomains to the backend container. Adjust 
 ## Notes
 
 - All Hashtopolis containers attach to the `proxy_net` Docker network — make sure your SWAG instance is on the same network.
-- The backend is exposed on port `8080` for direct access or debugging.
 - The `env.example` includes `HASHTOPOLIS_DB_HOST=db` — this is overridden to `hashtopolis-db` in `docker-compose.yml`.

@@ -16,8 +16,6 @@ services:
       HASHTOPOLIS_ADMIN_USER: ${HASHTOPOLIS_ADMIN_USER}
       HASHTOPOLIS_ADMIN_PASSWORD: ${HASHTOPOLIS_ADMIN_PASSWORD}
       HASHTOPOLIS_APIV2_ENABLE: ${HASHTOPOLIS_APIV2_ENABLE}
-    ports:
-      - 8080:80
     depends_on:
       hashtopolis-db:
         condition: service_healthy
@@ -61,8 +59,6 @@ services:
     environment:
       HASHTOPOLIS_BACKEND_URL: ${HASHTOPOLIS_BACKEND_URL}
     restart: always
-    ports:
-      - 4200:80
     depends_on:
       hashtopolis-backend:
         condition: service_healthy
