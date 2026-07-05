@@ -124,17 +124,10 @@ build_image() {
   fi
 }
 
-copy_swag_config() {
-  log_info "Copying SWAG subdomain config..."
-  mkdir -p ./swag/config/nginx/proxy-confs/
-  cp hashtopolis.subdomain.conf ./swag/config/nginx/proxy-confs/
-  log_ok "SWAG config copied"
-}
-
 main() {
   echo
   echo -e "${BLUE}========================================${NC}"
-  echo -e "${BLUE}  Hashtopolis + SWAG Image Builder${NC}"
+  echo -e "${BLUE}  Hashtopolis Image Builder${NC}"
   echo -e "${BLUE}========================================${NC}"
   echo
 
@@ -142,8 +135,6 @@ main() {
 
   ensure_repo "https://github.com/hashtopolis/web-ui.git" "web-ui"
   ensure_repo "https://github.com/hashtopolis/server.git" "server"
-
-  copy_swag_config
 
   echo
   log_info "Starting Docker builds..."

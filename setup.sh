@@ -40,42 +40,15 @@ setup_env() {
   fi
 }
 
-swag_init() {
-  log_info "Starting SWAG to generate config files..."
-  docker compose up swag -d
-
-  log_info "Waiting for SWAG config files..."
-  local max_attempts=30
-  local attempt=1
-  while [[ $attempt -le $max_attempts ]]; do
-    if [[ -f "./swag/config/nginx/ssl.conf" ]]; then
-      log_ok "SWAG config files detected"
-      break
-    fi
-    sleep 2
-    attempt=$((attempt + 1))
-  done
-
-  if [[ $attempt -gt $max_attempts ]]; then
-    log_error "SWAG config files not generated after 60 seconds"
-    log_error "Check docker logs: docker compose logs swag"
-    exit 1
-  fi
-
-  docker compose stop swag
-  log_ok "SWAG stopped after config generation"
-}
-
 main() {
   echo
   echo -e "${BLUE}========================================${NC}"
-  echo -e "${BLUE}  Hashtopolis + SWAG Setup${NC}"
+  echo -e "${BLUE}  Hashtopolis Setup${NC}"
   echo -e "${BLUE}========================================${NC}"
   echo
 
   check_prerequisites
   setup_env
-  swag_init
 
   echo
   log_info "Building Docker images..."

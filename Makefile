@@ -1,20 +1,22 @@
-.PHONY: help setup check build up down restart logs swag-init update clean
+.PHONY: help setup check build up down restart logs update clean
 
 .DEFAULT_GOAL := help
 
 help:
-	@echo "Hashtopolis + SWAG Management"
+	@echo "Hashtopolis Management"
 	@echo ""
-	@echo "  setup       Full setup from scratch (env -> swag-init -> build)"
+	@echo "  setup       Configure .env and build images"
 	@echo "  check       Verify prerequisites (docker, .env)"
 	@echo "  build       Build Docker images (frontend + backend)"
 	@echo "  up          Start all services"
 	@echo "  down        Stop all services"
-	@echo "  restart      Restart all services"
+	@echo "  restart     Restart all services"
 	@echo "  logs        Tail logs from all services"
-	@echo "  swag-init   Initialize SWAG config, then stop it"
 	@echo "  update      Pull upstream repos, rebuild images, restart services"
-	@echo "  clean       Remove cloned repos (web-ui, server)"
+	@echo "  clean       Remove cloned upstream repos"
+	@echo ""
+	@echo "SWAG:"
+	@echo "  Copy hashtopolis.subdomain.conf into your existing SWAG's proxy-confs/"
 
 setup: check
 	@./setup.sh
@@ -39,16 +41,6 @@ restart: down up
 
 logs:
 	@docker compose logs -f
-
-swag-init:
-	@docker compose up swag -d
-	@echo "Waiting for SWAG to generate config files..."
-	@for i in 1 2 3 4 5 6 7 8 9 10; do \
-		if [ -f ./swag/config/nginx/ssl.conf ]; then break; fi; \
-		sleep 2; \
-	done
-	@docker compose stop swag
-	@echo "SWAG config initialized."
 
 update: check
 	@./build-images.sh

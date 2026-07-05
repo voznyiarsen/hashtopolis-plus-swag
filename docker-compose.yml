@@ -1,33 +1,5 @@
 version: "3"
 services:
-  swag:
-    image: lscr.io/linuxserver/swag:latest
-    container_name: swag
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ= #required
-      - URL=example.com #required
-      - VALIDATION=dns
-      - SUBDOMAINS=wildcard
-      - DNSPLUGIN= #required if using dns validation
-      - PROPAGATION=60
-      - EMAIL= #optional
-      - ONLY_SUBDOMAINS=false
-      - STAGING=false
-      - DISABLE_F2B=
-      - SWAG_AUTORELOAD=true
-      - SWAG_AUTORELOAD_WATCHLIST=
-    volumes:
-      - ./swag/config:/config:Z
-    ports:
-      - 443:443
-      - 80:80 #optional
-    restart: unless-stopped
-    networks:
-      - proxy_network
   hashtopolis-backend:
     container_name: hashtopolis-backend
     pull_policy: never
@@ -56,7 +28,7 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - proxy_network
+      - proxy_net
   hashtopolis-db:
     container_name: hashtopolis-db
     image: mysql:8.0
@@ -80,7 +52,7 @@ services:
       retries: 10
       start_period: 30s
     networks:
-      - proxy_network
+      - proxy_net
   hashtopolis-frontend:
     container_name: hashtopolis-frontend
     pull_policy: never
@@ -101,13 +73,13 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - proxy_network
+      - proxy_net
 
 volumes:
   hashtopolis_db:
   hashtopolis:
 
 networks:
-  proxy_network:
-    name: proxy_network
-    driver: bridge
+  proxy_net:
+    name: proxy_net
+    external: true
