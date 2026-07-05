@@ -1,0 +1,25 @@
+version: "3"
+services:
+  hashtopolis-backend:
+    environment:
+      HASHTOPOLIS_DB_TYPE: postgres
+      HASHTOPOLIS_DB_USER: ${POSTGRES_USER}
+      HASHTOPOLIS_DB_PASS: ${POSTGRES_PASSWORD}
+      HASHTOPOLIS_DB_HOST: hashtopolis-db
+      HASHTOPOLIS_DB_DATABASE: ${POSTGRES_DATABASE}
+      HASHTOPOLIS_ADMIN_USER: ${HASHTOPOLIS_ADMIN_USER}
+      HASHTOPOLIS_ADMIN_PASSWORD: ${HASHTOPOLIS_ADMIN_PASSWORD}
+      HASHTOPOLIS_APIV2_ENABLE: ${HASHTOPOLIS_APIV2_ENABLE}
+  hashtopolis-db:
+    container_name: hashtopolis-db
+    image: postgres:18
+    platform: linux/arm64
+    restart: always
+    volumes:
+      - hashtopolis_db:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - proxy_net

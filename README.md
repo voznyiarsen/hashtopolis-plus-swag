@@ -29,10 +29,19 @@ cp hashtopolis.subdomain.conf /path/to/swag/config/nginx/proxy-confs/
 
 ## Environment
 
-Edit `.env` with your own values. At minimum, change:
-- `MYSQL_ROOT_PASS`
-- `MYSQL_PASSWORD`
-- `HASHTOPOLIS_ADMIN_PASSWORD`
+Edit `.env` with your own values. At minimum, change the passwords:
+
+### MySQL (default)
+
+Set `MYSQL_ROOT_PASS`, `MYSQL_PASSWORD`, and `HASHTOPOLIS_ADMIN_PASSWORD`.
+
+### PostgreSQL
+
+Uncomment the `POSTGRES_*` lines in `.env`, comment out the `MYSQL_*` lines, and start with the postgres override:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
+```
 
 ## Commands
 
