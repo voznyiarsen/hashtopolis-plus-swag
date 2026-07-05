@@ -48,15 +48,35 @@ Edit `.env` with your own values. At minimum, change:
 | `./update.sh`      | Check for updates, rebuild if needed          |
 | `./build-images.sh --help` | Full build script options              |
 
-## SWAG Config
+## Nginx Configs
 
-Copy `hashtopolis.subdomain.conf` into your existing SWAG's `proxy-confs/` directory:
+Two config files are provided depending on your setup:
+
+### SWAG
+
+Copy `hashtopolis.subdomain.conf` into your SWAG `proxy-confs/` directory:
 
 ```bash
 cp hashtopolis.subdomain.conf /path/to/swag/config/nginx/proxy-confs/
 ```
 
-This config proxies `hashtopolis.*` subdomains to the backend container. Adjust `server_name` and `proxy_pass` as needed.
+This config relies on SWAG's built-in `ssl.conf` and `proxy.conf` includes.
+
+### Raw nginx
+
+`hashtopolis.nginx.conf` is a self-contained config for standalone nginx. Edit the `ssl_certificate` paths and `server_name` to match your setup, then symlink it into your nginx `sites-enabled/`:
+
+```bash
+cp hashtopolis.nginx.conf /etc/nginx/sites-available/hashtopolis
+ln -s /etc/nginx/sites-available/hashtopolis /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+```
+
+Generate a self-signed certificate or use your own:
+
+```bash
+openssl req -x509 -newkey rsa:2048 -keyout nginx.key -out nginx.crt -days 365 -nodes
+```
 
 ## Notes
 
