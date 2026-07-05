@@ -17,14 +17,7 @@ services:
       HASHTOPOLIS_ADMIN_PASSWORD: ${HASHTOPOLIS_ADMIN_PASSWORD}
       HASHTOPOLIS_APIV2_ENABLE: ${HASHTOPOLIS_APIV2_ENABLE}
     depends_on:
-      hashtopolis-db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:80/api/v2/server", "-o", "/dev/null", "-s"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      - hashtopolis-db
     networks:
       - proxy_net
   hashtopolis-db:
@@ -43,12 +36,6 @@ services:
       - --default-authentication-plugin=mysql_native_password
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 15s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
     networks:
       - proxy_net
   hashtopolis-frontend:
@@ -60,14 +47,7 @@ services:
       HASHTOPOLIS_BACKEND_URL: ${HASHTOPOLIS_BACKEND_URL}
     restart: always
     depends_on:
-      hashtopolis-backend:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:80", "-o", "/dev/null", "-s"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      - hashtopolis-backend
     networks:
       - proxy_net
 
