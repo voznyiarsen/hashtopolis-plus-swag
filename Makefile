@@ -1,0 +1,60 @@
+.PHONY: help setup check build up down restart logs swag-init update clean
+
+.DEFAULT_GOAL := help
+
+help:
+	@echo "Hashtopolis + SWAG Management"
+	@echo ""
+	@echo "  setup       Full setup from scratch (env -> swag-init -> build)"
+	@echo "  check       Verify prerequisites (docker, .env)"
+	@echo "  build       Build Docker images (frontend + backend)"
+	@echo "  up          Start all services"
+	@echo "  down        Stop all services"
+	@echo "  restart      Restart all services"
+	@echo "  logs        Tail logs from all services"
+	@echo "  swag-init   Initialize SWAG config, then stop it"
+	@echo "  update      Pull upstream repos, rebuild images, restart services"
+	@echo "  clean       Remove cloned repos (web-ui, server)"
+
+setup: check
+	@./setup.sh
+
+check:
+	@echo "Checking prerequisites..."
+	@command -v docker >/dev/null 2>&1 || { echo "ERROR: docker is not installed"; exit 1; }
+	@docker info >/dev/null 2>&1 || { echo "ERROR: docker daemon not running or permission denied"; exit 1; }
+	@[ -f .env ] || { echo "ERROR: .env file not found. Copy from env.example and edit it"; exit 1; }
+	@echo "All prerequisites met."
+
+build:
+	@./build-images.sh
+
+up:
+	@docker compose up -d
+
+down:
+	@docker compose down
+
+restart: down up
+
+logs:
+	@docker compose logs -f
+
+swag-init:
+	@docker compose up swag -d
+	@echo "Waiting for SWAG to generate config files..."
+	@for i in 1 2 3 4 5 6 7 8 9 10; do \
+		if [ -f ./swag/config/nginx/ssl.conf ]; then break; fi; \
+		sleep 2; \
+	done
+	@docker compose stop swag
+	@echo "SWAG config initialized."
+
+update: check
+	@./build-images.sh
+	@docker compose up -d --force-recreate
+	@echo "Update complete."
+
+clean:
+	@rm -rf web-ui server
+	@echo "Removed web-ui and server repos."
